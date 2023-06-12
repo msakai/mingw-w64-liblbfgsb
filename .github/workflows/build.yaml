@@ -1,0 +1,34 @@
+on: [push, pull_request]
+name: build
+jobs:
+  build:
+    name: build
+    runs-on: windows-latest
+    steps:
+      - uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          install: >-
+            base-devel
+            mingw-w64-x86_64-toolchain
+            mingw-w64-x86_64-openblas
+
+      - name: Set git to use LF
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+
+      - uses: actions/checkout@v2
+
+      - name: Build
+        shell: msys2 {0}
+        run: |
+          MINGW_ARCH=mingw64 makepkg-mingw -sLf
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: binary-packages
+          path: |
+            *.zst
+          retention-days: 5
