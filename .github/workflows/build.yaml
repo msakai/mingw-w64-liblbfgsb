@@ -1,0 +1,45 @@
+on: [push, pull_request]
+name: build
+jobs:
+  build:
+    name: build
+    runs-on: windows-latest
+    steps:
+      - uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          install: >-
+            base-devel
+            mingw-w64-x86_64-toolchain
+            mingw-w64-x86_64-openblas
+
+      - name: Set git to use LF
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+
+      - uses: actions/checkout@v2
+
+      - name: Build
+        shell: msys2 {0}
+        run: |
+          MINGW_ARCH=mingw64 makepkg-mingw -sLf
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: binary-packages
+          path: |
+            *.zst
+          retention-days: 5
+
+      - name: Install
+        shell: msys2 {0}
+        run: |
+          pacman -U --noconfirm mingw-w64-*-liblbfgsb-*-*-any.pkg.tar.zst
+
+      - name: Test
+        shell: cmd
+        run: |
+          set MSYSTEM=MINGW64
+          msys2 -c "ldd /mingw64/bin/*lbfgsb* && cp /mingw64/share/doc/liblbfgsb/driver1.f ./ && gfortran -o x.lbfgsb_77_1.exe driver1.f -llbfgsb && ./x.lbfgsb_77_1.exe"
