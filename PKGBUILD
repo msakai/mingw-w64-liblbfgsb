@@ -7,13 +7,13 @@ pkgver=3.0
 pkgrel=1
 pkgdesc="L-BFGS-B - Software for Large-scale Bound-constrained Optimization (mingw-w64)"
 arch=('any')
-mingw_arch=('mingw32' 'mingw64')
+mingw_arch=('mingw32' 'mingw64' 'clang64')
 url='http://users.iems.northwestern.edu/~nocedal/lbfgsb.html'
 license=('BSD')
 depends=("${MINGW_PACKAGE_PREFIX}-openblas"
         $([[ ${MINGW_PACKAGE_PREFIX} == *-clang-* ]] || echo "${MINGW_PACKAGE_PREFIX}-gcc-libgfortran")
         )
-makedepends=("${MINGW_PACKAGE_PREFIX}-fc")
+makedepends=($([[ ${MINGW_PACKAGE_PREFIX} == *-clang-* ]] || echo "${MINGW_PACKAGE_PREFIX}-fc")
 options=('strip')
 source=(Lbfgsb.${pkgver}.tar.gz::http://users.iems.northwestern.edu/~nocedal/Software/Lbfgsb.${pkgver}.tar.gz
         replace-linpack-with-lapack.diff
@@ -41,10 +41,16 @@ prepare() {
 }
 
 build() {
+  if [[ ${MINGW_PACKAGE_PREFIX} != *-clang-* ]]; then
+    export FC=gfortran
+  else
+    export FC=flang
+  fi
+
   [[ -d "${srcdir}/build-${MINGW_CHOST}" ]] && rm -rf "${srcdir}/build-${MINGW_CHOST}"
   mkdir "${srcdir}/build-${MINGW_CHOST}"
   cd "${srcdir}/build-${MINGW_CHOST}"
-  gfortran -O2 -shared -o liblbfgsb.dll -Wl,--out-implib,liblbfgsb.dll.a \
+  ${FC} -O2 -shared -o liblbfgsb.dll -Wl,--out-implib,liblbfgsb.dll.a \
     "${srcdir}/Lbfgsb.${pkgver}/lbfgsb.f" "${srcdir}/Lbfgsb.${pkgver}/timer.f" \
     -lopenblas
 }
