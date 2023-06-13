@@ -55,6 +55,7 @@ package() {
   install -Dm755 -t "${pkgdir}${MINGW_PREFIX}/lib" liblbfgsb.dll.a
 
   cd "${srcdir}/Lbfgsb.${pkgver}"
-  install -Dm644 -t "${pkgdir}${MINGW_PREFIX}/share/doc/liblbfgsb" README License.txt algorithm.pdf code.pdf
-  install -Dm644 -t "${pkgdir}${MINGW_PREFIX}/share/doc/liblbfgsb" driver1.f driver1.f90 driver2.f driver2.f90 driver3.f driver3.f90
+  install -Dm644 -t "${pkgdir}${MINGW_PREFIX}/share/doc/${_realname}" README algorithm.pdf code.pdf
+  install -Dm644 -t "${pkgdir}${MINGW_PREFIX}/share/doc/${_realname}" driver1.f driver1.f90 driver2.f driver2.f90 driver3.f driver3.f90
+  install -Dm644 -t "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}" License.txt
 }
