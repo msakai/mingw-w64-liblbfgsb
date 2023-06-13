@@ -12,6 +12,8 @@ jobs:
             base-devel
             mingw-w64-x86_64-toolchain
             mingw-w64-x86_64-openblas
+            mingw-w64-i686-toolchain
+            mingw-w64-i686-openblas
 
       - name: Set git to use LF
         run: |
@@ -24,6 +26,7 @@ jobs:
         shell: msys2 {0}
         run: |
           MINGW_ARCH=mingw64 makepkg-mingw -sLf
+          MINGW_ARCH=mingw32 makepkg-mingw -sLf
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
@@ -38,8 +41,14 @@ jobs:
         run: |
           pacman -U --noconfirm mingw-w64-*-liblbfgsb-*-*-any.pkg.tar.zst
 
-      - name: Test
+      - name: Test (mingw64)
         shell: cmd
         run: |
           set MSYSTEM=MINGW64
           msys2 -c "ldd /mingw64/bin/*lbfgsb* && cp /mingw64/share/doc/liblbfgsb/driver1.f ./ && gfortran -o x.lbfgsb_77_1.exe driver1.f -llbfgsb && ./x.lbfgsb_77_1.exe"
+
+      - name: Test (mingw32)
+        shell: cmd
+        run: |
+          set MSYSTEM=MINGW32
+          msys2 -c "ldd /mingw32/bin/*lbfgsb* && cp /mingw32/share/doc/liblbfgsb/driver1.f ./ && gfortran -o x.lbfgsb_77_1.exe driver1.f -llbfgsb && ./x.lbfgsb_77_1.exe"
