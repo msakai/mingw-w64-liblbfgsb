@@ -32,3 +32,14 @@ jobs:
           path: |
             *.zst
           retention-days: 5
+
+      - name: Install
+        shell: msys2 {0}
+        run: |
+          pacman -U --noconfirm mingw-w64-*-liblbfgsb-*-*-any.pkg.tar.zst
+
+      - name: Test
+        shell: cmd
+        run: |
+          set MSYSTEM=MINGW64
+          msys2 -c "ldd /mingw64/bin/*lbfgsb* && cp /mingw64/share/doc/liblbfgsb/driver1.f ./ && gfortran -o x.lbfgsb_77_1.exe driver1.f -llbfgsb && ./x.lbfgsb_77_1.exe"
