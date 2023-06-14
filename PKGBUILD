@@ -13,7 +13,7 @@ license=('BSD')
 depends=("${MINGW_PACKAGE_PREFIX}-openblas"
         $([[ ${MINGW_PACKAGE_PREFIX} == *-clang-* ]] || echo "${MINGW_PACKAGE_PREFIX}-gcc-libgfortran")
         )
-makedepends=($([[ ${MINGW_PACKAGE_PREFIX} == *-clang-* ]] || echo "${MINGW_PACKAGE_PREFIX}-fc")
+makedepends=($([[ ${MINGW_PACKAGE_PREFIX} == *-clang-* ]] || echo "${MINGW_PACKAGE_PREFIX}-fc"))
 options=('strip')
 source=(Lbfgsb.${pkgver}.tar.gz::http://users.iems.northwestern.edu/~nocedal/Software/Lbfgsb.${pkgver}.tar.gz
         replace-linpack-with-lapack.diff
