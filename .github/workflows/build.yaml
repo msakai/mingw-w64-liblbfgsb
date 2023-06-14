@@ -17,6 +17,8 @@ jobs:
             mingw-w64-clang-x86_64-toolchain
             mingw-w64-clang-x86_64-flang
             mingw-w64-clang-x86_64-openblas
+            mingw-w64-ucrt-x86_64-toolchain
+            mingw-w64-ucrt-x86_64-openblas
       - name: Set git to use LF
         run: |
           git config --global core.autocrlf false
@@ -30,6 +32,7 @@ jobs:
           MINGW_ARCH=mingw64 makepkg-mingw -sLf
           MINGW_ARCH=mingw32 makepkg-mingw -sLf
           MINGW_ARCH=clang64 makepkg-mingw -sLf
+          MINGW_ARCH=ucrt64 makepkg-mingw -sLf
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
@@ -61,3 +64,9 @@ jobs:
         run: |
           set MSYSTEM=CLANG64
           msys2 -c "ldd /clang64/bin/*lbfgsb* && cp /clang64/share/doc/liblbfgsb/driver1.f ./ && flang -o x.lbfgsb_77_1.exe driver1.f -llbfgsb && ./x.lbfgsb_77_1.exe"
+
+      - name: Test (ucrt64)
+        shell: cmd
+        run: |
+          set MSYSTEM=UCRT64
+          msys2 -c "ldd /ucrt64/bin/*lbfgsb* && cp /ucrt64/share/doc/liblbfgsb/driver1.f ./ && gfortran -o x.lbfgsb_77_1.exe driver1.f -llbfgsb && ./x.lbfgsb_77_1.exe"
