@@ -18,10 +18,12 @@ options=('strip')
 source=(Lbfgsb.${pkgver}.tar.gz::http://users.iems.northwestern.edu/~nocedal/Software/Lbfgsb.${pkgver}.tar.gz
         replace-linpack-with-lapack.diff
         silence.diff
+        liblbfgsb.def
         )
 sha256sums=('f5b9a1c8c30ff6bcc8df9b5d5738145f4cbe4c7eadec629220e808dcf0e54720'
             '1466cb7f79d233acfd882e0ed4bc75ecabd7d509a071c4997139505de068e2b2'
             '2d5cd46b869b569e72a6d81c45e17224603acf1840263cd394f7ed972f46a621'
+            '127fca2644093ee80e413d33a5b1bda6d0a83af4ebd2238592caa41865989ed4'
             )
 
 # Helper macros to help make tasks easier #
@@ -50,7 +52,7 @@ build() {
   [[ -d "${srcdir}/build-${MINGW_CHOST}" ]] && rm -rf "${srcdir}/build-${MINGW_CHOST}"
   mkdir "${srcdir}/build-${MINGW_CHOST}"
   cd "${srcdir}/build-${MINGW_CHOST}"
-  ${FC} -O2 -shared -o liblbfgsb.dll -Wl,--out-implib,liblbfgsb.dll.a \
+  ${FC} -O2 -shared -o liblbfgsb.dll -Wl,--out-implib,liblbfgsb.dll.a "${srcdir}/liblbfgsb.def" \
     "${srcdir}/Lbfgsb.${pkgver}/lbfgsb.f" "${srcdir}/Lbfgsb.${pkgver}/timer.f" \
     -lopenblas
 }
