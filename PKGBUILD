@@ -16,8 +16,8 @@ depends=("${MINGW_PACKAGE_PREFIX}-openblas"
 makedepends=($([[ ${MINGW_PACKAGE_PREFIX} == *-clang-* ]] || echo "${MINGW_PACKAGE_PREFIX}-fc"))
 options=('strip')
 source=(Lbfgsb.${pkgver}.tar.gz::http://users.iems.northwestern.edu/~nocedal/Software/Lbfgsb.${pkgver}.tar.gz
-        replace-linpack-with-lapack.diff
-        silence.diff
+        replace-linpack-with-lapack.diff::http://nonempty.org/software/haskell-l-bfgs-b/replace-linpack-with-lapack.diff
+        silence.diff::http://nonempty.org/software/haskell-l-bfgs-b/silence.diff
         liblbfgsb.def
         )
 sha256sums=('f5b9a1c8c30ff6bcc8df9b5d5738145f4cbe4c7eadec629220e808dcf0e54720'
