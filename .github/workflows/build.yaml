@@ -12,13 +12,16 @@ jobs:
             base-devel
             mingw-w64-x86_64-toolchain
             mingw-w64-x86_64-openblas
+            mingw-w64-x86_64-fc
             mingw-w64-i686-toolchain
             mingw-w64-i686-openblas
+            mingw-w64-i686-fc
             mingw-w64-clang-x86_64-toolchain
             mingw-w64-clang-x86_64-flang
             mingw-w64-clang-x86_64-openblas
             mingw-w64-ucrt-x86_64-toolchain
             mingw-w64-ucrt-x86_64-openblas
+            mingw-w64-ucrt-x86_64-fc
       - name: Set git to use LF
         run: |
           git config --global core.autocrlf false
